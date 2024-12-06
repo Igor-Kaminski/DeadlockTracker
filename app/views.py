@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import time
 import requests
+import os
 from flask import (
     render_template,
     flash,
@@ -24,8 +25,8 @@ from app.models import User, SteamAccount, Hero, FavouriteHero
 from app.forms import RegistrationForm, LoginForm
 
 # API Keys and Important Links
-API_KEY = "HEXE-22afdffb-be7a-4290-9a47-3281a1cb18ae"
-STEAM_API_KEY = "461C23366FEB84116663C61D7A8A2D8B"
+API_KEY = os.getenv("API_KEY")
+STEAM_API_KEY = os.getenv("STEAM_API_KEY")
 STEAM_OPENID_URL = "https://steamcommunity.com/openid"
 
 
