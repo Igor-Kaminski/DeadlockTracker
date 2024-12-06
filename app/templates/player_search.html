@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Player Search History{% endblock %}
+
+{% block content %}
+<h1>Search for a Player's History Stats</h1>
+
+<form action="/player" method="get" class="form-inline justify-content-center">
+    <div class="form-group mb-2 w-50">
+        <label for="player_id" class="sr-only">Player ID or Steam Vanity URL</label>
+        <input
+            type="text"
+            id="player_id"
+            name="player_id"
+            class="form-control w-100"
+            placeholder="Enter Player ID or Steam URL"
+            required
+        >
+    </div>
+    <button type="submit" class="btn btn-primary btn-block mt-2">Search</button>
+</form>
+
+{% if error_message %}
+    <div class="alert alert-danger mt-3" role="alert">
+        {{ error_message }}
+    </div>
+{% endif %}
+
+<p class="mt-3"><a href="/">Back to Dashboard</a></p>
+{% endblock %}

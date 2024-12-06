@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Advanced Match History{% endblock %}
+
+{% block content %}
+<h1>Advanced Match History</h1>
+
+
+<h2>Matches:</h2>
+{% if player.matches %}
+    <ul>
+        {% for match in player.matches %}
+            <li>
+                <h3>Match ID: {{ match.match_id }}</h3>
+                <ul>
+                    {% for key, value in match.items() %}
+                        <li><strong>{{ key.replace("_", " ").capitalize() }}:</strong> {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No matches found for this player.</p>
+{% endif %}
+<p><a href="/">Back to Dashboard</a></p>
+{% endblock %}

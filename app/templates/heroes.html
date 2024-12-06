@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Heroes{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Hero Statistics</h1>
+
+    <!-- Filters -->
+    <div class="filters mb-4">
+    <form id="filter-form" method="GET" action="{{ url_for('heroes') }}">
+        <div class="row">
+            <!-- Region Dropdown -->
+            <div class="col-md-3">
+                <label for="region">Select Region</label>
+                <select id="region" name="region" class="form-control">
+                    <option value="Europe" {% if region == "Europe" %}selected{% endif %}>Europe</option>
+                    <option value="Asia" {% if region == "Asia" %}selected{% endif %}>Asia</option>
+                    <option value="NAmerica" {% if region == "NAmerica" %}selected{% endif %}>North America</option>
+                    <option value="SAmerica" {% if region == "SAmerica" %}selected{% endif %}>South America</option>
+                    <option value="Oceania" {% if region == "Oceania" %}selected{% endif %}>Oceania</option>
+                </select>
+            </div>
+
+            <!-- Time Filter -->
+            <div class="col-md-3">
+                <label for="time_filter">Select Time Period</label>
+                <select id="time_filter" name="time_filter" class="form-control">
+                    <option value="week" {% if time_filter == "week" %}selected{% endif %}>Past Week</option>
+                    <option value="two_weeks" {% if time_filter == "two_weeks" %}selected{% endif %}>Past Two Weeks</option>
+                    <option value="month" {% if time_filter == "month" %}selected{% endif %}>Past Month</option>
+                    <option value="three_months" {% if time_filter == "three_months" %}selected{% endif %}>Past Three Months</option>
+                    <option value="full" {% if time_filter == "full" %}selected{% endif %}>All Time</option>
+                </select>
+            </div>
+
+            <!-- Win Rate Filter -->
+            <div class="col-md-3">
+                <label for="win_rate_min">Min Win Rate (%)</label>
+                <input
+                    type="number"
+                    id="win_rate_min"
+                    name="win_rate_min"
+                    class="form-control"
+                    min="0"
+                    max="100"
+                    value="{{ win_rate_min or 0 }}"
+                >
+            </div>
+
+            <!-- Tier Filter -->
+            <div class="col-md-3">
+                <label for="tier_filter">Select Tier</label>
+                <select id="tier_filter" name="tier_filter" class="form-control">
+                    <option value="" {% if tier_filter == "" %}selected{% endif %}>All Tiers</option>
+                    <option value="S" {% if tier_filter == "S" %}selected{% endif %}>S</option>
+                    <option value="A" {% if tier_filter == "A" %}selected{% endif %}>A</option>
+                    <option value="B" {% if tier_filter == "B" %}selected{% endif %}>B</option>
+                    <option value="C" {% if tier_filter == "C" %}selected{% endif %}>C</option>
+                    <option value="D" {% if tier_filter == "D" %}selected{% endif %}>D</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Filter</button>
+    </form>
+</div>
+
+
+    <!-- Hero Statistics Table -->
+    <table class="table table-dark table-hover" id="hero-stats-table">
+    <thead>
+        <tr>
+            <th data-sort="name" class="sortable">Hero</th>
+            <th data-sort="win_rate" class="sortable">Win Rate</th>
+            <th data-sort="pick_rate" class="sortable">Pick Rate</th>
+            <th data-sort="total_matches" class="sortable">Total Matches</th>
+            <th data-sort="tier" class="sortable">Tier</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for hero in heroes %}
+        <tr>
+            <td data-name="{{ hero.name }}" class="d-flex align-items-center">
+                <img src="{{ hero.image }}" alt="Hero {{ hero.name }}" style="width:50px; height:auto; margin-right: 10px;">
+                <span>{{ hero.name }}</span>
+            </td>
+            <td data-win_rate="{{ hero.win_rate|replace('%', '') }}">{{ hero.win_rate }}</td>
+            <td data-pick_rate="{{ hero.pick_rate|replace('%', '') }}">{{ hero.pick_rate }}</td>
+            <td data-total_matches="{{ hero.total_matches }}">{{ hero.total_matches }}</td>
+            <td data-tier="{{ hero.tier }}" class="text-center">
+                <span class="tier-badge tier-{{ hero.tier }}">{{ hero.tier }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const table = document.getElementById("hero-stats-table");
+    const headers = document.querySelectorAll(".sortable");
+
+    headers.forEach(header => {
+        header.addEventListener("click", () => {
+            const sortField = header.dataset.sort;
+            const rows = Array.from(table.querySelectorAll("tbody tr"));
+            const isDescending = header.classList.contains("desc");
+            const direction = isDescending ? 1 : -1;
+
+            // Tier ranking order for custom sorting
+            const tierOrder = { "S": 1, "A": 2, "B": 3, "C": 4, "D": 5 };
+
+            // Sort rows
+            rows.sort((a, b) => {
+                let aValue, bValue;
+
+                if (sortField === "tier") {
+                    aValue = a.querySelector(`[data-${sortField}]`).dataset[sortField];
+                    bValue = b.querySelector(`[data-${sortField}]`).dataset[sortField];
+                    return (tierOrder[aValue] - tierOrder[bValue]) * direction;
+                } else if (sortField === "name") {
+                    aValue = a.querySelector(`[data-${sortField}]`).dataset[sortField];
+                    bValue = b.querySelector(`[data-${sortField}]`).dataset[sortField];
+                    return aValue.localeCompare(bValue) * direction;
+                } else {
+                    aValue = parseFloat(a.querySelector(`[data-${sortField}]`).dataset[sortField]) || 0;
+                    bValue = parseFloat(b.querySelector(`[data-${sortField}]`).dataset[sortField]) || 0;
+                    return (bValue - aValue) * direction;
+                }
+            });
+
+            // Reorder rows in the DOM
+            rows.forEach(row => table.querySelector("tbody").appendChild(row));
+
+            // Toggle sort order
+            headers.forEach(h => h.classList.remove("asc", "desc"));
+            header.classList.add(isDescending ? "asc" : "desc");
+        });
+    });
+});
+</script>
+{% endblock %}

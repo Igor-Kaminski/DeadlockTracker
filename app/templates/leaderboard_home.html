@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1>Leaderboard Regions</h1>
+    <p>Select a region to view its leaderboard:</p>
+</div>
+<div class="row justify-content-center">
+    {% for region in regions %}
+        <div class="col-md-3 text-center mb-4">
+            <img src="{{ url_for('static', filename='images/' + region + '.png') }}" alt="{{ region }}" class="img-fluid rounded shadow-sm mb-3" style="max-height: 150px;">
+            <h5>{{ region }}</h5>
+            <a href="{{ url_for('leaderboard', region=region) }}" class="btn btn-primary btn-sm mt-2">View Leaderboard</a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,115 @@
+body {
+    background-color: #19232d;
+    color: #d1d5db;
+    font-family: 'Alumni Sans', sans-serif;
+    font-size: 18px;
+}
+
+.navbar {
+    background-color: #12181e;
+    border-bottom: 1px solid #333;
+}
+
+.navbar-brand img {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.nav-link {
+    color: #d1d5db;
+}
+
+.nav-link:hover {
+    color: #ffffff;
+}
+
+.list-group-item {
+    background-color: #1f2a34;
+    border: none;
+    color: #d1d5db;
+    font-size: 18px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 15px;
+}
+
+.list-group-item strong {
+    color: #ffffff;
+}
+
+.list-group-item small {
+    color: #a0aec0;
+}
+
+.list-group-item a {
+    background-color: #2563eb;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.list-group-item a:hover {
+    background-color: #1e40af;
+}
+
+h1, h2, p {
+    font-size: 20px;
+    color: #e5e7eb;
+}
+
+a {
+    color: #2563eb;
+}
+
+a:hover {
+    color: #1e40af;
+}
+
+.container {
+    padding-top: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.table {
+    font-size: 0.9em;
+}
+
+.table img.hero-img {
+    width: 60px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.thead-light {
+    background-color: #6c757d;
+    color: white;
+}
+
+
+
+.img-fluid {
+    transition: transform 0.2s ease-in-out;
+}
+
+.img-fluid:hover {
+    transform: scale(1.1);
+}
+
+.btn-primary {
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #1e40af;
+    transform: translateY(-2px);
+}

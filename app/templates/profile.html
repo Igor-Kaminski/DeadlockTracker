@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <!-- Steam Avatar and Steam Name -->
+    <div class="col-md-3 text-center d-flex flex-column align-items-center">
+        {% if avatar_url %}
+            <h3>Steam Name</h3>
+            <p class="font-weight-bold">{{ steam_account.steam_name }}</p>
+            <img src="{{ avatar_url }}" alt="Steam Avatar" class="img-fluid rounded-circle mb-3" style="width: 150px; height: auto;">
+        {% else %}
+            <div class="text-center">
+                <a href="{{ url_for('link_steam') }}">
+                    <img src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png" alt="Sign in through Steam">
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Main User Info -->
+    <div class="col-md-6 text-center d-flex flex-column align-items-center justify-content-center">
+        <h1>Welcome, {{ user.username }}</h1>
+        <p><strong>Steam ID:</strong> {{ steam_account.steam_id }}</p>
+        <p>View your Steam profile:
+            <a href="https://steamcommunity.com/profiles/{{ steam_account.steam_id }}" target="_blank">Click here</a>
+        </p>
+    </div>
+
+    <!-- Account Settings, Win/Loss -->
+    <div class="col-md-3 text-center d-flex flex-column align-items-center justify-content-center">
+        <h3 style="margin-top: 0px;">Account Settings</h3>
+        <a href="{{ url_for('change_password') }}" class="btn btn-primary btn-block mt-2 mb-4" style="width: 80%;">Change Password</a>
+
+        <!-- Win/Loss Counter -->
+        <div class="win-loss-counter mt-4">
+            <h5>Past 15 Games</h5>
+            <p>Wins: <strong>{{ win_loss['wins'] }}</strong></p>
+            <p>Losses: <strong>{{ win_loss['losses'] }}</strong></p>
+        </div>
+    </div>
+</div>
+
+<!-- Favourite Heroes Section -->
+<div class="row mt-5">
+    <div class="col-md-12 text-center">
+        <h3>Your Favourite Heroes (Last 3 Months)</h3>
+        {% if favourite_heroes %}
+            <div class="d-flex justify-content-center">
+                {% for favourite in favourite_heroes %}
+                    <div class="favourite-hero text-center mx-3">
+                        <img src="{{ favourite.hero.image_url }}" alt="{{ favourite.hero.name }}" class="img-fluid mb-2" style="width: 100px; height: auto;">
+                        <h4>{{ favourite.hero.name }}</h4>
+                        {% if favourite.stats %}
+                            <p>Matches Played: {{ favourite.stats.matches }}</p>
+                            <p>Win Rate: {{ favourite.stats.win_rate }}%</p>
+                            <p>Kills Per Match: {{ favourite.stats.kills_per_match }}</p>
+                            <p>Assists Per Match: {{ favourite.stats.assists_per_match }}</p>
+                        {% else %}
+                            <p>No stats available for this hero.</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <h4>No favourite heroes selected.</h4>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Match History -->
+<div class="mt-5">
+    <h2>Last 15 Matches</h2>
+    {% if match_history %}
+        <div class="table-responsive">
+            <table class="table table-dark table-bordered table-hover text-center">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Match ID</th>
+                        <th>Hero</th>
+                        <th>Kills</th>
+                        <th>Deaths</th>
+                        <th>Assists</th>
+                        <th>Net Worth</th>
+                        <th>Last Hits</th>
+                        <th>Duration (mins)</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in match_history %}
+                        <tr>
+                            <td>{{ match.match_id }}</td>
+                            <td>
+                                <img src="{{ url_for('static', filename='images/hero_' + match.hero_id|string + '.png') }}"
+                                     alt="Hero Image" class="img-fluid hero-img" style="width: 50px; height: auto;">
+                            </td>
+                            <td>{{ match.player_kills }}</td>
+                            <td>{{ match.player_deaths }}</td>
+                            <td>{{ match.player_assists }}</td>
+                            <td>{{ match.net_worth }}</td>
+                            <td>{{ match.last_hits }}</td>
+                            <td>{{ match.match_duration_s // 60 }}:{{ '%02d' | format(match.match_duration_s % 60) }}</td>
+                            <td>{{ "Win" if match.match_result == match.player_team else "Loss" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No match history available.</p>
+    {% endif %}
+</div>
+{% endblock %}

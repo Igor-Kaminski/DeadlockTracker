@@ -1,0 +1,51 @@
+.table th.sortable {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.table th.sortable:hover {
+    background-color: rgba(108, 99, 255, 0.3);
+    color: white;
+}
+
+.tier-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1;
+    margin-left: -1.5cm;
+    width: auto;
+    height: auto;
+}
+
+.tier-S {
+    background-color: #6c63ff;
+    color: white;
+}
+
+.tier-A {
+    background-color: #4ecca3;
+    color: white;
+}
+
+.tier-B {
+    background-color: #f4c542;
+    color: white;
+}
+
+.tier-C {
+    background-color: #f44336;
+    color: white;
+}
+
+.tier-D {
+    background-color: #9e9e9e;
+    color: white;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}

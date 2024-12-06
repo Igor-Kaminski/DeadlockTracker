@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Patch Notes -->
+    <div class="col-md-4">
+        <h2>Patch Notes</h2>
+        <ul class="list-group">
+            {% for update in updates %}
+                <li class="list-group-item">
+                    <strong>{{ update.title }}</strong><br>
+                    <small>{{ update.pub_date }}</small><br>
+                    <a href="{{ update.link }}" class="btn btn-sm mt-2">Read More</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Welcome Message and Search -->
+    <div class="col-md-8">
+        <h1>Welcome to Deadlock Stat Tracker</h1>
+        <p>Track stats, explore heroes, and see the leaderboard!</p>
+
+        <!-- Search Form -->
+        <div class="mt-4">
+            <form action="/player" method="get" class="form-inline justify-content-center">
+                <div class="form-group mb-2 w-50">
+                    <label for="player_id" class="sr-only">Player ID or Steam Vanity URL</label>
+                    <input
+                        type="text"
+                        id="player_id"
+                        name="player_id"
+                        class="form-control w-100"
+                        placeholder="Enter Player ID or Steam URL"
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-2">Search</button>
+            </form>
+        </div>
+
+        <!-- Favourite Heroes Section -->
+<div class="mt-4">
+    <h2>Your Favourite Heroes</h2>
+    <div class="row">
+        {% for hero in heroes %}
+        <div class="col-md-3 text-center mb-3">
+            <img src="{{ hero.image_url }}" alt="{{ hero.name }}" class="img-fluid mb-2">
+            <h5>{{ hero.name }}</h5>
+            <button
+                class="btn btn-light favourite-btn"
+                data-hero-id="{{ hero.id }}">
+                <img
+                    src="{{ url_for('static', filename='images/' + (hero.id in favourite_hero_ids and 'full_star.png' or 'empty_star.png')) }}"
+                    alt="Favourite"
+                    width="24">
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const favouriteButtons = document.querySelectorAll('.favourite-btn');
+
+    favouriteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const heroId = button.dataset.heroId;
+            const isFavourited = button.querySelector('img').src.includes('full_star.png');
+
+            fetch(`/favourite_hero/${heroId}`, {
+                method: isFavourited ? 'DELETE' : 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "added") {
+                    const img = button.querySelector('img');
+                    img.src = '{{ url_for('static', filename='images/full_star.png') }}';
+                } else if (data.status === "removed") {
+                    const img = button.querySelector('img');
+                    img.src = '{{ url_for('static', filename='images/empty_star.png') }}';
+                } else if (data.status === "error") {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Failed to update favourite status:', error));
+        });
+    });
+});
+
+</script>
+
+{% endblock %}

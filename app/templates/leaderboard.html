@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('leaderboard_home') }}" class="btn btn-primary">Back to Regions</a>
+</div>
+<div class="table-responsive">
+    <h1>Leaderboard for {{ region }}</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Account Name</th>
+                <th>Rank</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in leaderboard %}
+                <tr>
+                    <td>{{ entry.account_name }}</td>
+                    <td>{{ entry.rank }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
